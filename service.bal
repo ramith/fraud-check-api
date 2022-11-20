@@ -1,17 +1,35 @@
 import ballerina/http;
+import ballerina/log;
+
+
+type Payment record {
+    string orderId;
+    float amount;
+    string currency;
+    string 'source;
+};
+
+type FraudCheckResult record {
+    string orderId;
+    int fraudScore;
+    string fraudStatus;
+    string description;
+};
 
 # A service representing a network-accessible API
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
     # A resource for generating greetings
-    # + name - the input string name
-    # + return - string name with hello message or error
-    resource function get greeting(string name) returns string|error {
-        // Send a response back to the caller.
-        if name is "" {
-            return error("name should not be empty!");
-        }
-        return "Hello, " + name;
+    # + payment - the payment request
+    # + return - an fraud check status or error
+    resource function post payment/execute(@http:Payload Payment payment) returns FraudCheckResult|error {
+        log:printInfo("fraud check recieved", payment = payment);
+        return {
+            orderId: payment.orderId,
+            fraudScore: 75,
+            fraudStatus: "passed",
+            description: "fraud check completed successfully"
+        };
     }
 }
