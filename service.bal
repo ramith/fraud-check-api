@@ -23,7 +23,7 @@ service / on new http:Listener(9090) {
     # A resource for generating greetings
     # + payment - the payment request
     # + return - an fraud check status or error
-    resource function post payment/execute(@http:Payload Payment payment) returns FraudCheckResult|error {
+    resource function post fraud/'check(@http:Payload Payment payment) returns FraudCheckResult|error {
         log:printInfo("fraud check recieved", payment = payment);
         return {
             orderId: payment.orderId,
